@@ -1,1 +1,3 @@
-# f5-azure-demo
+# F5 and Azure enterprise demo
+
+WORK IN PROGRESS
