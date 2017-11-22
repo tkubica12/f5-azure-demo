@@ -1,3 +1,2 @@
-azurecredentials.rc
+secrets.rc
 *.retry
-work-in-progress

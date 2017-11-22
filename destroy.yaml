@@ -1,0 +1,19 @@
+- name: Destroy F5 and Azure demo environment
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+
+  - name: Ensure resource group for Azure central environment DOES NOT exist
+    azure_rm_resourcegroup:
+      state: absent
+      force: yes
+      name: f5demo-service
+      location: westeurope
+
+  - name: Ensure resource group for on-premises demo DOES NOT exist
+    azure_rm_resourcegroup:
+      state: absent
+      force: yes
+      name: f5demo-onprem
+      location: westeurope

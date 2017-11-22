@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "netName": {
+      "metadata": {
+          "description": "Name of VNET"
+      }, 
+      "type": "string"
+    },
+    "netPrefix": {
+      "metadata": {
+        "description": "VNET address space"
+      },
+      "type": "string"
+    },
+    "internalPrefix": {
+      "metadata": {
+        "description": "IP prefix for internal subnet"
+      },
+      "type": "string"
+    },
+    "externalPrefix": {
+      "metadata": {
+        "description": "IP prefix for external subnet"
+      },
+      "type": "string"
+    },
+    "managementPrefix": {
+      "metadata": {
+        "description": "IP prefix for management subnet"
+      },
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('netName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "[parameters('netName')]"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('netPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "internal",
+            "properties": {
+              "addressPrefix": "[parameters('internalPrefix')]"
+            }
+          },
+          {
+            "name": "external",
+            "properties": {
+              "addressPrefix": "[parameters('externalPrefix')]"
+            }
+          },
+          {
+            "name": "management",
+            "properties": {
+              "addressPrefix": "[parameters('managementPrefix')]"
+            }
+          }
+        ]
+      }
+    }],
+  "outputs": {}
+}

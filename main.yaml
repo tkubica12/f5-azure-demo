@@ -1,0 +1,97 @@
+- name: F5 and Azure demo playbook
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    location: westeurope
+    centralNetName: centralNet
+    onpremNetName: onpremNet
+    adminUsername: tomas
+    adminPassword: Azure12345678
+    license1: "{{ lookup('env','F5_license1') }}"
+    license2: "{{ lookup('env','F5_license2') }}"
+  tasks:
+
+  - name: Ensure resource group for Azure central environment exist
+    azure_rm_resourcegroup:
+      name: f5demo-service
+      location: "{{ location }}"
+
+  - name: Ensure Azure central networks exist
+    azure_rm_deployment:
+      deployment_name: centralNet
+      location: "{{ location }}"
+      resource_group_name: f5demo-service
+      template: "{{ lookup('file', 'netDeploy.json') }}"
+      parameters:
+        netName: 
+          value: "{{ centralNetName }}"
+        netPrefix: 
+          value: 10.0.0.0/16
+        internalPrefix: 
+          value: 10.0.10.0/24
+        externalPrefix: 
+          value: 10.0.20.0/24
+        managementPrefix: 
+          value: 10.0.30.0/24
+
+  - name: Ensure F5 in central network is deployed
+    azure_rm_deployment:
+      deployment_name: f5
+      location: "{{ location }}"
+      resource_group_name: f5demo-service
+      template: "{{ lookup('file', 'big-ip-ve-byol-3nic.json') }}"
+      parameters:
+        adminUsername: 
+          value: "{{ adminUsername }}"
+        adminPassword:
+          value: "{{ adminPassword }}"
+        dnsLabel:
+          value: mybigipcentral
+        instanceName:
+          value: mybigipcentral
+        instanceType:
+          value: Standard_D11_v2
+        licenseKey1:
+          value: "{{ license1 }}"
+        numberOfExternalIps:
+          value: 5
+        vnetName:
+          value: "{{ centralNetName }}"
+        vnetResourceGroupName:
+          value: f5demo-onprem
+        mgmtSubnetName:
+          value: management
+        mgmtIpAddress:
+          value: 10.0.30.10
+        externalSubnetName:
+          value: external
+        externalIpAddressRangeStart:
+          value: 10.0.20.10
+        internalSubnetName:
+          value: internal
+        internalIpAddress:
+          value: 10.0.10.10
+
+  - name: Ensure resource group for on-premises demo exist
+    azure_rm_resourcegroup:
+      name: f5demo-onprem
+      location: "{{ location }}"
+
+  - name: Ensure networks for on-premises demo exist
+    azure_rm_deployment:
+      deployment_name: onpremNet
+      location: "{{ location }}"
+      resource_group_name: f5demo-onprem
+      template: "{{ lookup('file', 'netDeploy.json') }}"
+      parameters:
+        netName: 
+          value: "{{ onpremNetName }}"
+        netPrefix: 
+          value: 10.128.0.0/16
+        internalPrefix: 
+          value: 10.128.10.0/24
+        externalPrefix: 
+          value: 10.128.20.0/24
+        managementPrefix: 
+          value: 10.128.30.0/24
