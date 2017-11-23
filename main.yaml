@@ -13,10 +13,7 @@
     groupPrefix: f5demo
   tasks:
 
-  - debug:
-      var: "{{ groupPrefix }}-service"
-  - fail:
-  
+ 
   - name: Ensure resource group for Azure central environment exist
     azure_rm_resourcegroup:
       name: f5demo-service
