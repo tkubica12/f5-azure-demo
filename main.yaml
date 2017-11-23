@@ -8,22 +8,22 @@
     onpremNetName: onpremNet
     adminUsername: tomas
     adminPassword: Azure12345678
-    license1: "{{ lookup('env','F5_license1') }}"
-    license2: "{{ lookup('env','F5_license2') }}"
+    license1: "{{ lookup('env','F5_LICENSE1') }}"
+    license2: "{{ lookup('env','F5_LICENSE2') }}"
     groupPrefix: f5demo
     dnsPrefix: mybigip
   tasks:
 
   - name: Ensure resource group for Azure central environment exist
     azure_rm_resourcegroup:
-      name: "{{ groupPrefix }}-service"
+      name: "{{ groupPrefix }}-central"
       location: "{{ location }}"
 
   - name: Ensure Azure central networks exist
     azure_rm_deployment:
       deployment_name: centralNet
       location: "{{ location }}"
-      resource_group_name: "{{ groupPrefix }}-service"
+      resource_group_name: "{{ groupPrefix }}-central"
       template: "{{ lookup('file', 'netDeploy.json') }}"
       parameters:
         netName: 
@@ -41,7 +41,7 @@
     azure_rm_deployment:
       deployment_name: f5
       location: "{{ location }}"
-      resource_group_name: "{{ groupPrefix }}-service"
+      resource_group_name: "{{ groupPrefix }}-central"
       template: "{{ lookup('file', 'big-ip-ve-byol-3nic.json') }}"
       parameters:
         adminUsername: 
@@ -53,17 +53,17 @@
         instanceName:
           value: "{{ dnsPrefix }}-central"
         instanceType:
-          value: Standard_D3_v2
+          value: Standard_DS3_v2
         imageName:
           value: Best
         licenseKey1:
           value: "{{ license1 }}"
         numberOfExternalIps:
-          value: 5
+          value: 3
         vnetName:
           value: "{{ centralNetName }}"
         vnetResourceGroupName:
-          value: "{{ groupPrefix }}-service"
+          value: "{{ groupPrefix }}-central"
         mgmtSubnetName:
           value: management
         mgmtIpAddress:
@@ -116,7 +116,7 @@
         instanceName:
           value: "{{ dnsPrefix }}-onprem"
         instanceType:
-          value: Standard_D3_v2
+          value: Standard_DS3_v2
         imageName:
           value: Best
         licenseKey1:
