@@ -10,8 +10,13 @@
     adminPassword: Azure12345678
     license1: "{{ lookup('env','F5_license1') }}"
     license2: "{{ lookup('env','F5_license2') }}"
+    groupPrefix: f5demo
   tasks:
 
+  - debug:
+      var: "{{ groupPrefix }}-service"
+  - fail:
+  
   - name: Ensure resource group for Azure central environment exist
     azure_rm_resourcegroup:
       name: f5demo-service
@@ -128,12 +133,12 @@
         mgmtSubnetName:
           value: management
         mgmtIpAddress:
-          value: 10.100.30.10
+          value: 10.128.30.10
         externalSubnetName:
           value: external
         externalIpAddressRangeStart:
-          value: 10.100.20.10
+          value: 10.128.20.10
         internalSubnetName:
           value: internal
         internalIpAddress:
-          value: 10.100.10.10
+          value: 10.128.10.10
