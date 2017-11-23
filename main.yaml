@@ -51,7 +51,7 @@
         instanceName:
           value: mybigipcentral
         instanceType:
-          value: Standard_D11_v2
+          value: Standard_D3_v2
         imageName:
           value: Best
         licenseKey1:
