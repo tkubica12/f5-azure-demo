@@ -22,7 +22,7 @@
       template: "{{ lookup('file', 'webFarm.json') }}"
       parameters:
         instances: 
-          value: "2"
+          value: 2
         vnetResourceGroupName:
           value: "{{ groupPrefix }}-central"
         vnetName:
@@ -30,7 +30,11 @@
         subnetName:
           value: internal
         vmSize:
-          value: Standard_BS1
+          value: Standard_B1s
         F5pool:
           value: web1
+        adminUsername:
+          value: tomas
+        adminPassword:
+          value: Azure12345678
  

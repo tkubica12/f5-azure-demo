@@ -117,7 +117,7 @@
           },
           "storageProfile": {
             "imageReference": {
-                "id": "[resourceId('Microsoft.Compute/images', 'f5-web-image')]"
+                "id": "[resourceId('muj-image-katalog', 'Microsoft.Compute/images', 'f5-web-image')]"
             },
             "osDisk": {
               "createOption": "FromImage"
