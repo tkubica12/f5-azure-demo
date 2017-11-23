@@ -11,19 +11,19 @@
     license1: "{{ lookup('env','F5_license1') }}"
     license2: "{{ lookup('env','F5_license2') }}"
     groupPrefix: f5demo
+    dnsPrefix: mybigip
   tasks:
 
- 
   - name: Ensure resource group for Azure central environment exist
     azure_rm_resourcegroup:
-      name: f5demo-service
+      name: "{{ groupPrefix }}-service"
       location: "{{ location }}"
 
   - name: Ensure Azure central networks exist
     azure_rm_deployment:
       deployment_name: centralNet
       location: "{{ location }}"
-      resource_group_name: f5demo-service
+      resource_group_name: "{{ groupPrefix }}-service"
       template: "{{ lookup('file', 'netDeploy.json') }}"
       parameters:
         netName: 
@@ -41,7 +41,7 @@
     azure_rm_deployment:
       deployment_name: f5
       location: "{{ location }}"
-      resource_group_name: f5demo-service
+      resource_group_name: "{{ groupPrefix }}-service"
       template: "{{ lookup('file', 'big-ip-ve-byol-3nic.json') }}"
       parameters:
         adminUsername: 
@@ -49,9 +49,9 @@
         adminPassword:
           value: "{{ adminPassword }}"
         dnsLabel:
-          value: mybigipcentral
+          value: "{{ dnsPrefix }}-central"
         instanceName:
-          value: mybigipcentral
+          value: "{{ dnsPrefix }}-central"
         instanceType:
           value: Standard_D3_v2
         imageName:
@@ -63,7 +63,7 @@
         vnetName:
           value: "{{ centralNetName }}"
         vnetResourceGroupName:
-          value: f5demo-service
+          value: "{{ groupPrefix }}-service"
         mgmtSubnetName:
           value: management
         mgmtIpAddress:
@@ -79,14 +79,14 @@
 
   - name: Ensure resource group for on-premises demo exist
     azure_rm_resourcegroup:
-      name: f5demo-onprem
+      name: "{{ groupPrefix }}-onprem"
       location: "{{ location }}"
 
   - name: Ensure networks for on-premises demo exist
     azure_rm_deployment:
       deployment_name: onpremNet
       location: "{{ location }}"
-      resource_group_name: f5demo-onprem
+      resource_group_name: "{{ groupPrefix }}-onprem"
       template: "{{ lookup('file', 'netDeploy.json') }}"
       parameters:
         netName: 
@@ -104,7 +104,7 @@
     azure_rm_deployment:
       deployment_name: f5
       location: "{{ location }}"
-      resource_group_name: f5demo-onprem
+      resource_group_name: "{{ groupPrefix }}-onprem"
       template: "{{ lookup('file', 'big-ip-ve-byol-3nic.json') }}"
       parameters:
         adminUsername: 
@@ -112,9 +112,9 @@
         adminPassword:
           value: "{{ adminPassword }}"
         dnsLabel:
-          value: mybigiponprem
+          value: "{{ dnsPrefix }}-onprem"
         instanceName:
-          value: mybigiponprem
+          value: "{{ dnsPrefix }}-onprem"
         instanceType:
           value: Standard_D3_v2
         imageName:
@@ -126,7 +126,7 @@
         vnetName:
           value: "{{ onpremNetName }}"
         vnetResourceGroupName:
-          value: f5demo-onprem
+          value: "{{ groupPrefix }}-onprem"
         mgmtSubnetName:
           value: management
         mgmtIpAddress:
