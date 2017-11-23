@@ -1,0 +1,32 @@
+- name: F5 and Azure demo playbook
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    location: westeurope
+    centralNetName: centralNet
+    onpremNetName: onpremNet
+    adminUsername: tomas
+    adminPassword: Azure12345678
+    license1: "{{ lookup('env','F5_LICENSE1') }}"
+    license2: "{{ lookup('env','F5_LICENSE2') }}"
+    groupPrefix: f5demo
+    dnsPrefix: mybigip
+  tasks:
+
+  - name: Ensure F5 in central network is deployed
+    azure_rm_deployment:
+      deployment_name: f5
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-web"
+      template: "{{ lookup('file', 'webFarm.json') }}"
+      parameters:
+        instances: 
+          value: 2
+        vnetResourceGroupName:
+          value: "{{ groupPrefix }}-central"
+        vnetName:
+          value: "{{ centralNetName }}"
+        subnetName:
+          value: internal
+ 

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "instances": {
+        "type": "string",
+        "metadata": {
+          "description": "Number of web servers in a farm"
+        }
+    },
+    "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing vnet"
+        }
+    },
+    "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing subnet"
+        }
+    },
+    "vnetResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of resource group where vnet is deployed"
+        }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "webFarmAS",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2,
+        "managed": true
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('farmNIC', copyindex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('instances')]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[resourceId(parameters('vnetResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
