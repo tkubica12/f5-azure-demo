@@ -61,7 +61,7 @@
         vnetName:
           value: "{{ centralNetName }}"
         vnetResourceGroupName:
-          value: f5demo-onprem
+          value: f5demo-service
         mgmtSubnetName:
           value: management
         mgmtIpAddress:
