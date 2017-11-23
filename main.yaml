@@ -52,6 +52,8 @@
           value: mybigipcentral
         instanceType:
           value: Standard_D11_v2
+        imageName:
+          value: Best
         licenseKey1:
           value: "{{ license1 }}"
         numberOfExternalIps:
