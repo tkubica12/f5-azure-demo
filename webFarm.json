@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "instances": {
-        "type": "string",
+        "type": "int",
         "metadata": {
           "description": "Number of web servers in a farm"
         }
@@ -25,6 +25,30 @@
         "metadata": {
           "description": "Name of resource group where vnet is deployed"
         }
+    },
+    "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify VM size"
+        }
+    },
+    "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify VM username"
+        }
+    },
+    "adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Specify VM password"
+        }
+    },
+    "F5pool": {
+        "type": "string",
+        "metadata": {
+          "description": "Tag to identify resources for single F5 server pool"
+        }
     }
   },
   "variables": {},
@@ -44,6 +68,9 @@
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('farmNIC', copyindex())]",
+      "tags": {
+        "F5pool": "[parameters('F5pool')]"
+      },
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
@@ -62,6 +89,48 @@
           }
         ]
       }
+    },
+    {
+        "apiVersion": "2016-04-30-preview",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[concat('web', copyindex())]",
+        "copy": {
+          "name": "virtualMachineLoop",
+          "count": "[parameters('instances')]"
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[concat('Microsoft.Network/networkInterfaces/', 'farmNIC', copyindex())]",
+          "Microsoft.Compute/availabilitySets/webFarmAS"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', 'webFarmAS')]"
+          },
+          "hardwareProfile": {
+            "vmSize": "[parameters('vmSize')]"
+          },
+          "osProfile": {
+            "computerName": "[concat('web', copyIndex())]",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+                "id": "[resourceId('Microsoft.Compute/images', 'f5-web-image')]"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('farmNIC', copyindex()))]"
+              }
+            ]
+          }
+        }
     }
   ]
 }

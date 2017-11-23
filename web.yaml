@@ -14,7 +14,7 @@
     dnsPrefix: mybigip
   tasks:
 
-  - name: Ensure F5 in central network is deployed
+  - name: Ensure web farm is deployed
     azure_rm_deployment:
       deployment_name: f5
       location: "{{ location }}"
@@ -22,11 +22,15 @@
       template: "{{ lookup('file', 'webFarm.json') }}"
       parameters:
         instances: 
-          value: 2
+          value: "2"
         vnetResourceGroupName:
           value: "{{ groupPrefix }}-central"
         vnetName:
           value: "{{ centralNetName }}"
         subnetName:
           value: internal
+        vmSize:
+          value: Standard_BS1
+        F5pool:
+          value: web1
  
