@@ -100,7 +100,7 @@
         managementPrefix: 
           value: 10.128.30.0/24
 
-  - name: Ensure F5 in onpremises is deployed
+  - name: Ensure F5 on premises is deployed
     azure_rm_deployment:
       deployment_name: f5
       location: "{{ location }}"

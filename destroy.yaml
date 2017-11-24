@@ -17,3 +17,17 @@
       force: yes
       name: f5demo-onprem
       location: westeurope
+
+  - name: Ensure resource group for on-premises demo DOES NOT exist
+    azure_rm_resourcegroup:
+      state: absent
+      force: yes
+      name: f5demo-web1
+      location: westeurope
+
+  - name: Ensure resource group for on-premises demo DOES NOT exist
+    azure_rm_resourcegroup:
+      state: absent
+      force: yes
+      name: f5demo-web2
+      location: westeurope
