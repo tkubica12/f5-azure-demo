@@ -216,3 +216,15 @@
   - name: Update internal F5 NIC to enable IP Forwarding to server as gateway for machines in internal subnet
     command: "az network nic update -g {{ groupPrefix }}-central -n {{ dnsPrefix }}-central-int --ip-forwarding true"
     delegate_to: localhost
+
+  - name: Ensure routing table with default route to F5 exists
+    azure_rm_deployment:
+      deployment_name: f5-routing-table
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-central"
+      template: "{{ lookup('file', 'routeTable.json') }}"
+      parameters:
+        applianceIp: 
+          value: "10.0.10.10"
+        routeTableName:
+          value: route-int-to-f5

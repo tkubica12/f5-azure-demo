@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "applianceIp": {
+      "metadata": {
+          "description": "IP address of network virtual applicance to point default route to"
+      }, 
+      "type": "string"
+    },
+    "routeTableName": {
+      "metadata": {
+          "description": "Name of routing table"
+      }, 
+      "type": "string"
+    }
+  },
+  "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/routeTables",
+        "name": "[parameters('routeTableName')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "routes": [
+            {
+              "name": "DefaultToAppliance",
+              "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[parameters('applianceIp')]"
+              }
+            }
+          ]
+        }
+    }
+  ],
+  "outputs": {}
+}
