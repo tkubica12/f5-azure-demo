@@ -10,6 +10,9 @@
     adminPassword: Azure12345678
     license1: "{{ lookup('env','F5_LICENSE1') }}"
     license2: "{{ lookup('env','F5_LICENSE2') }}"
+    servicePrincipal: "{{ lookup('env','AZURE_CLIENT_ID') }}"
+    clientSecret: "{{ lookup('env','AZURE_SECRET') }}"
+    tenantId: "{{ lookup('env','AZURE_TENANT') }}"
     groupPrefix: f5demo
     dnsPrefix: mybigip
   tasks:
@@ -205,3 +208,11 @@
           access: Allow
           priority: 102
           direction: Inbound
+
+  - name: Login to Azure CLI 2.0
+    command: "az login --service-principal -u {{ servicePrincipal }} -p {{ clientSecret }} --tenant {{ tenantId }}"
+    delegate_to: localhost
+
+  - name: Update internal F5 NIC to enable IP Forwarding to server as gateway for machines in internal subnet
+    command: "az network nic update -g {{ groupPrefix }}-central -n {{ dnsPrefix }}-central-int --ip-forwarding true"
+    delegate_to: localhost
