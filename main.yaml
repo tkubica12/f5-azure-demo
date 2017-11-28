@@ -194,13 +194,13 @@
       name: "{{ dnsPrefix }}-central-ext-nsg"
       rules:
         - name: Allow_HTTP
-          protocol: TCP
+          protocol: Tcp
           destination_port_range: 80
           access: Allow
           priority: 100
           direction: Inbound
         - name: Allow_HTTPS
-          protocol: TCP
+          protocol: Tcp
           destination_port_range: 443
           access: Allow
           priority: 102
