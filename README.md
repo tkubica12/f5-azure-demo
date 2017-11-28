@@ -19,6 +19,14 @@ In our enterprise demo we will use automated provisioning of environment based o
 
 ## Prepare deployment server with Ansible and dependencies
 
+```
+sudo apt-get install python-pip -y
+sudo pip install ansible[azure]
+sudo pip install azure
+sudo pip install packaging
+sudo pip install msrestazure
+```
+
 ## Deploy environment
 
 ```
