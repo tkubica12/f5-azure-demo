@@ -228,3 +228,7 @@
           value: "10.0.10.10"
         routeTableName:
           value: route-int-to-f5
+
+  - name: Update internal subnet with routing table
+    command: "az network vnet subnet update -g {{ groupPrefix }}-central --vnet-name {{ centralNetName }} -n internal --route-table route-int-to-f5"
+    delegate_to: localhost
