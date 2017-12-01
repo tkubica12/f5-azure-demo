@@ -2,7 +2,39 @@
 
 **WORK IN PROGRESS**
 
-While a lot of born-in-cloud applications are built only with cloud-native resources such as PaaS (App Service / SQL DB / Cosmos DB), Azure Load Balancer, Azure Application Gateway, Azure VPN, Azure Traffic Manager, some applications beying moved to cloud as VM have more needs and might require enterprise solutions such as F5. Many enterprises are using F5 and want to build their architecture in a cloud in similar way. Azure and F5 are very well integrate to offer enterprise grade solutions.
+While a lot of born-in-cloud applications are built only with cloud-native resources such as PaaS (App Service / SQL DB / Cosmos DB), Azure Load Balancer, Azure Application Gateway, Azure VPN, Azure Traffic Manager, some applications beying moved to cloud as VM have more needs and might require enterprise solutions such as F5. Many enterprises are using F5 and want to build their architecture in a cloud in similar way. Azure and F5 are very well integrated to offer enterprise grade solutions.
+
+- [F5 and Azure enterprise demo](#f5-and-azure-enterprise-demo)
+    - [Why F5 and Azure](#why-f5-and-azure)
+    - [How to build enterprise network in Azure with F5](#how-to-build-enterprise-network-in-azure-with-f5)
+- [Enterprise demo: bring your complete app delivery and security environment to Azure with F5](#enterprise-demo-bring-your-complete-app-delivery-and-security-environment-to-azure-with-f5)
+    - [Prepare deployment server with Ansible and dependencies](#prepare-deployment-server-with-ansible-and-dependencies)
+    - [Deploy environment](#deploy-environment)
+    - [How automation solution works](#how-automation-solution-works)
+        - [Overall architecture](#overall-architecture)
+        - [Provide inputs via environmental variables](#provide-inputs-via-environmental-variables)
+        - [1st set of tasks: Ensure F5 in Azure environment is deployed (F5inAzure.yaml)](#1st-set-of-tasks-ensure-f5-in-azure-environment-is-deployed-f5inazureyaml)
+            - [Creating resource group and networking](#creating-resource-group-and-networking)
+            - [Deploying F5](#deploying-f5)
+            - [Configure infrastructure firewall rules on F5 external NIC to allow our applications](#configure-infrastructure-firewall-rules-on-f5-external-nic-to-allow-our-applications)
+            - [Enable IP Forwarding on F5 internal NIC](#enable-ip-forwarding-on-f5-internal-nic)
+            - [Change routing in internal subnet to use F5 as default gateway](#change-routing-in-internal-subnet-to-use-f5-as-default-gateway)
+        - [2nd set of tasks: Ensure Azure web servers are deployed (webServers.yaml)](#2nd-set-of-tasks-ensure-azure-web-servers-are-deployed-webserversyaml)
+            - [Deploying 2 web applications](#deploying-2-web-applications)
+        - [3st set of tasks: Ensure F5 is configured for our apps](#3st-set-of-tasks-ensure-f5-is-configured-for-our-apps)
+            - [Use Ansible to configure iApp service discovery](#use-ansible-to-configure-iapp-service-discovery)
+            - [Use Ansible to create virtual servers](#use-ansible-to-create-virtual-servers)
+        - [4th set of tasks: Ensure F5 on premises (simulated in Azure) is deployed (F5onPrem.yaml)](#4th-set-of-tasks-ensure-f5-on-premises-simulated-in-azure-is-deployed-f5onpremyaml)
+            - [Deploy on-premises simulated environment](#deploy-on-premises-simulated-environment)
+        - [5st set of tasks: Make sure bursting environment with app and iApp Application Connector exists (bursting.yaml)](#5st-set-of-tasks-make-sure-bursting-environment-with-app-and-iapp-application-connector-exists-burstingyaml)
+            - [Separate resource group, network and subnet](#separate-resource-group-network-and-subnet)
+            - [Depoy web application](#depoy-web-application)
+            - [Deploy and start F5 cloud proxy](#deploy-and-start-f5-cloud-proxy)
+- [Easily secure application with F5 WAF and Azure Security Center](#easily-secure-application-with-f5-waf-and-azure-security-center)
+    - [Create VM with web application](#create-vm-with-web-application)
+    - [See application recommendation in Azure Security Center and deploy F5](#see-application-recommendation-in-azure-security-center-and-deploy-f5)
+    - [Simulate attack and see alerts in Azure Security Center](#simulate-attack-and-see-alerts-in-azure-security-center)
+- [Author](#author)
 
 ## Why F5 and Azure
 F5 offers a lot of capabilities that Azure customers might want to leverage in cloud as well. For example load-balancing capabilities are well positioned for traditional applications that require features like draining session and complicated health checks. With strong customization engine (iRules) customers have offen written their specific solutions and want them move to cloud. F5 also provides advanced security on network, protocol and application layer like WAF or DLP. Other capabilities include access management, global DNS balancing and more.
@@ -13,7 +45,7 @@ Enterprise scenarios allow to build shared spoke VNET (can be in separate subscr
 
 More details here: https://docs.microsoft.com/en-us/azure/networking/networking-virtual-datacenter
 
-# Enterprise demo
+# Enterprise demo: bring your complete app delivery and security environment to Azure with F5
 
 In our enterprise demo we will use automated provisioning of environment based on ARM templates and Ansible including Azure networking, VM deployment, F5 deployment and parts of F5 configuration. Demonstration will include iApp Service Discovery to automatically add Azure resources based on tags automatically to server pools. 
 
