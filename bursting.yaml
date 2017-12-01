@@ -61,3 +61,13 @@
         - 22
         - 443
         - 8080
+
+  - name: Ensure VM extension to deploy F5 cloud proxy is created
+    azure_rm_virtualmachine_extension:
+      name: f5-proxy-extension
+      resource_group: "{{ groupPrefix }}-bursting"
+      virtual_machine_name: f5-cloud-proxy
+      publisher: Microsoft.Azure.Extensions
+      virtual_machine_extension_type: CustomScript
+      type_handler_version: 2.0
+      settings: '{"fileUris": ["https://github.com/tkubica12/f5-azure-demo/blob/master/f5-cloud-proxy/f5-acproxy-1.1.0-build.70.tgz", "https://raw.githubusercontent.com/tkubica12/f5-azure-demo/master/f5-cloud-proxy/deployF5Proxy.sh"],"commandToExecute": "deployF5Proxy.sh"}'
