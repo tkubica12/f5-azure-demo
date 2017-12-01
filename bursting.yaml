@@ -70,5 +70,5 @@
       publisher: Microsoft.Azure.Extensions
       virtual_machine_extension_type: CustomScript
       type_handler_version: 2.0
-      settings: '{"fileUris": ["https://github.com/tkubica12/f5-azure-demo/blob/master/f5-cloud-proxy/f5-acproxy-1.1.0-build.70.tgz", "https://raw.githubusercontent.com/tkubica12/f5-azure-demo/master/f5-cloud-proxy/deployF5Proxy.sh"],"commandToExecute": "deployF5Proxy.sh"}'
+      settings: '{"fileUris": ["https://github.com/tkubica12/f5-azure-demo/blob/master/f5-cloud-proxy/f5-acproxy-1.1.0-build.70.tgz", "https://raw.githubusercontent.com/tkubica12/f5-azure-demo/master/f5-cloud-proxy/deployF5Proxy.sh"],"commandToExecute": "sh deployF5Proxy.sh"}'
      
