@@ -21,7 +21,7 @@
     azure_rm_deployment:
       deployment_name: f5-bursting
       location: "{{ location }}"
-      resource_group_name: "{{ groupPrefix }}-burst-web"
+      resource_group_name: "{{ groupPrefix }}-bursting"
       template: "{{ lookup('file', 'webFarm.json') }}"
       parameters:
         instances: 
@@ -43,7 +43,7 @@
 
   - name: Ensure VM for F5 cloud proxy is deployed
     azure_rm_virtualmachine:
-      resource_group: "{{ groupPrefix }}-burst-web"
+      resource_group: "{{ groupPrefix }}-bursting"
       name: f5-cloud-proxy
       vm_size: Standard_A1_v2
       managed_disk_type: Standard_LRS
