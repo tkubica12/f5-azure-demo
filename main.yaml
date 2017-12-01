@@ -17,14 +17,18 @@
     dnsPrefix: mybigip
   tasks:
 
+  - name: Make sure bursting environment with app and iApp Application Connector exists
+    include_tasks: bursting.yaml
+
+  - name: TESTING ONLY, to be romoved
+    fail:
+
   - name: Ensure F5 in Azure environment is deployed
-    include: F5inAzure.yaml
+    include_tasks: F5inAzure.yaml
 
   - name: Ensure Azure web servers are deployed
-    include: webServers.yaml
-    
-  - name: Ensure F5 on premises (simulated in Azure) is deployed
-    include: F5onPrem.yaml
+    include_tasks: webServers.yaml
 
-  - name: Make sure bursting environment with app and iApp Application Connector exists
-    include: bursting.yaml
+  - name: Ensure F5 on premises (simulated in Azure) is deployed
+    include_tasks: F5onPrem.yaml
+
