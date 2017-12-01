@@ -1,0 +1,47 @@
+  - name: Ensure web farm 1 is deployed
+    azure_rm_deployment:
+      deployment_name: f5
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-web1"
+      template: "{{ lookup('file', 'webFarm.json') }}"
+      parameters:
+        instances: 
+          value: 3
+        vnetResourceGroupName:
+          value: "{{ groupPrefix }}-central"
+        vnetName:
+          value: "{{ centralNetName }}"
+        subnetName:
+          value: internal
+        vmSize:
+          value: Standard_B1s
+        F5pool:
+          value: web1
+        adminUsername:
+          value: tomas
+        adminPassword:
+          value: Azure12345678
+
+  - name: Ensure web farm 2 is deployed
+    azure_rm_deployment:
+      deployment_name: f5
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-web2"
+      template: "{{ lookup('file', 'webFarm.json') }}"
+      parameters:
+        instances: 
+          value: 3
+        vnetResourceGroupName:
+          value: "{{ groupPrefix }}-central"
+        vnetName:
+          value: "{{ centralNetName }}"
+        subnetName:
+          value: internal
+        vmSize:
+          value: Standard_B1s
+        F5pool:
+          value: web2
+        adminUsername:
+          value: tomas
+        adminPassword:
+          value: Azure12345678

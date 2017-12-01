@@ -1,0 +1,18 @@
+  - name: Ensure resource group for bursting to Azure exist
+    azure_rm_resourcegroup:
+      name: "{{ groupPrefix }}-bursting"
+      location: "{{ location }}"
+
+  - name: Make sure bursting VNET exists
+    azure_rm_virtualnetwork:
+      name: "{{ groupPrefix }}-burstnet"
+      resource_group: "{{ groupPrefix }}-bursting"
+      address_prefixes_cidr:
+      - "10.99.0.0/24"
+
+  - name: Make sure bursting subnet exists
+    azure_rm_subnet:
+      name: "{{ groupPrefix }}-burstsub"
+      virtual_network_name: "{{ groupPrefix }}-burstnet"
+      resource_group: "{{ groupPrefix }}-bursting"
+      address_prefix_cidr: "10.99.0.0/24"

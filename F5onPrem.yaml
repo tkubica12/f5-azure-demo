@@ -1,0 +1,62 @@
+  - name: Ensure resource group for on-premises demo exist
+    azure_rm_resourcegroup:
+      name: "{{ groupPrefix }}-onprem"
+      location: "{{ location }}"
+
+  - name: Ensure networks for on-premises demo exist
+    azure_rm_deployment:
+      deployment_name: onpremNet
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-onprem"
+      template: "{{ lookup('file', 'netDeploy.json') }}"
+      parameters:
+        netName: 
+          value: "{{ onpremNetName }}"
+        netPrefix: 
+          value: 10.128.0.0/16
+        internalPrefix: 
+          value: 10.128.10.0/24
+        externalPrefix: 
+          value: 10.128.20.0/24
+        managementPrefix: 
+          value: 10.128.30.0/24
+
+  - name: Ensure F5 on premises is deployed
+    azure_rm_deployment:
+      deployment_name: f5
+      location: "{{ location }}"
+      resource_group_name: "{{ groupPrefix }}-onprem"
+      template: "{{ lookup('file', 'big-ip-ve-byol-3nic.json') }}"
+      parameters:
+        adminUsername: 
+          value: "{{ adminUsername }}"
+        adminPassword:
+          value: "{{ adminPassword }}"
+        dnsLabel:
+          value: "{{ dnsPrefix }}-onprem"
+        instanceName:
+          value: "{{ dnsPrefix }}-onprem"
+        instanceType:
+          value: Standard_DS3_v2
+        imageName:
+          value: Best
+        licenseKey1:
+          value: "{{ license2 }}"
+        numberOfExternalIps:
+          value: 1
+        vnetName:
+          value: "{{ onpremNetName }}"
+        vnetResourceGroupName:
+          value: "{{ groupPrefix }}-onprem"
+        mgmtSubnetName:
+          value: management
+        mgmtIpAddress:
+          value: 10.128.30.10
+        externalSubnetName:
+          value: external
+        externalIpAddressRangeStart:
+          value: 10.128.20.10
+        internalSubnetName:
+          value: internal
+        internalIpAddress:
+          value: 10.128.10.10
