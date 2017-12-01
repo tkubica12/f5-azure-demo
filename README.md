@@ -52,43 +52,78 @@ We do not want to store sensitive information in playbook itself so it is not ac
 
 One set of important secrets are login details to your Azure subscription using service principal. First you need to create service principal and key, which is service account that allows Ansible and Azure CLI to interact with Azure. Also you need to provide your tenant ID and subscription ID. Also automation will need to license F5 instances so make sure correct license key is provided.
 
-### Creating resource group and networking
-First two steps are to create resource group via Ansible Azure module and then use Ansible to deploy ARM template with networking and subnets.
+### 1st set of tasks: Ensure F5 in Azure environment is deployed (F5inAzure.yaml)
+In this series of tasks stored in F5inAzure.yaml we will deploy our Azure networking environment, F5 virtual applicance and configure our environment to modify Azure firewalling and routing rules to point to F5.
 
-### Deploying F5
+#### Creating resource group and networking
+Let's create resource group via Ansible Azure module and then use Ansible to deploy ARM template with networking and subnets.
+
+#### Deploying F5
 In next step we will deploy F5 usv Ansible using official unmodified F5 template for 3 NIC configuration and BYOL (by downloading different template you can leverage pay-as-you-go model also). We provide key parameters to template including subnet names, license keys and IP addresses. Template will allocate 3 additional public IP address for use with our applications.
 
-### Deploy on-premises simulated environment
-Next set of steps is to deploy resource group, network and F5 to simulate on-premises environment.
+#### Configure infrastructure firewall rules on F5 external NIC to allow our applications
+Since we did not want to modify F5 template itself (so you can download latest version with no need to repeat modifications) we now need to enable ports 80 and 443 on external NIC to allow users to access applications.
 
-### Deploying 2 web applications
+#### Enable IP Forwarding on F5 internal NIC
+In order for F5 to receive traffic not directly target to it (which is how routing works) so F5 can function as gateway for workloads deployed in internal subnet, we will use Azure CLI to configure IP Forwarding.
+
+#### Change routing in internal subnet to use F5 as default gateway
+Currently internal subnet is routed directly to Internet so in order for load-balancing via F5 to work, we would need to use SNAT. That would hide information about users and hurt our application logs + we want all traffic from internal subnet to reach Internet via F5 to provide additional protections. There we create routing table pointing to F5 and deploy to internal subnet
+
+### 2nd set of tasks: Ensure Azure web servers are deployed (webServers.yaml)
+In this series of tasks we will deploy two web applications with 3 instances each. We will place it to internal subnet and use tagging for service discovery.
+
+#### Deploying 2 web applications
 In this step we will leverage ARM template that is designed to deploy instances of web server from custom image in Azure (web app is already preconfigured in this image). Input parameter includes number of instances to be deployed and template will automaticaly create that amount of VMs, NICs and disks.
 
 Both applications will use NICs that are tagged F5pool:web1 or F5pool:web2. We will use those later in F5 configuration with iApp Service Discovery to automatically discover nodes and assign to F5 pool.
 
-### Configure infrastructure firewall rules on F5 external NIC to allow our applications
-Since we did not want to modify F5 template itself (so you can download latest version with no need to repeat modifications) we now need to enable ports 80 and 443 on external NIC to allow users to access applications.
+### 3st set of tasks: Ensure F5 is configured for our apps
+**TODO: configure F5 via Ansible**
+Currently done manualy
 
-### Enable IP Forwarding on F5 internal NIC
-In order for F5 to receive traffic not directly target to it (which is how routing works) so F5 can function as gateway for workloads deployed in internal subnet, we will use Azure CLI to configure IP Forwarding.
-
-### Change routing in internal subnet to use F5 as default gateway
-Currently internal subnet is routed directly to Internet so in order for load-balancing via F5 to work, we would need to use SNAT. That would hide information about users and hurt our application logs + we want all traffic from internal subnet to reach Internet via F5 to provide additional protections. There we create routing table pointing to F5 and deploy to internal subnet
-
-### Use Ansible to configure iApp service discovery
+#### Use Ansible to configure iApp service discovery
 TO DO
 
 Currently this is done via F5 GUI
 
-### Use Ansible to create virtual servers
+#### Use Ansible to create virtual servers
 TO DO
 
 Currently this is done via F5 GUI. We will use additional addresses (10.0.20.11, 10.0.20.12 and 10.0.20.13) as virtual server. Since Azure has public IP associated with those interfaces users will be able to access thos via Internet (Azure is providing 1:1 IP NAT).
 
+### 4th set of tasks: Ensure F5 on premises (simulated in Azure) is deployed (F5onPrem.yaml)
+In this series of task we deploy simulation of on-premises environment with F5.
+
+#### Deploy on-premises simulated environment
+Next set of steps is to deploy resource group, network and F5 to simulate on-premises environment.
+
+### 5st set of tasks: Make sure bursting environment with app and iApp Application Connector exists (bursting.yaml)
+Prepare demo of bursting example - creating web nodes in Azure together with F5 cloud proxy to quickly add performance to on-premises application without going throw full enterprise-grade deployment with network interconnection, F5 in cloud etc.
+
+#### Separate resource group, network and subnet
+First we will deploy separate environment - resource group, network and subnet.
+
+#### Depoy web application
+Next we are going to deploy 3 instances of web application.
+
+#### Deploy and start F5 cloud proxy
+In order for F5 to create TLS tunnel from on-premises to cloud we need to have Linux VM with public IP address, installed Docker engine and run Docker container with F5 proxy. This is automated using deployment of Ubuntu 16.04 VM and running VM extension with custom script to install Docker, download image and run it.
 
 # Easily secure application with F5 WAF and Azure Security Center
 
 In this demo we will use simplified integrated scenario to secure web application running in Azure. We will use Azure Security Center to automatically deploy F5 WAF to protect application, simulate attack and demonstrate integration of F5 WAF with Security Center.
+
+## Create VM with web application
+First create VM with web application and make sure some client is accessing it, so Azure Security Center properly discovers this app.
+
+## See application recommendation in Azure Security Center and deploy F5
+After brief moment Azure Security Center will discover your web app and recommend protecting it with F5. Select F5 and fill in all the details. ACS will automatically deploy F5 in configure WAF. There will be Azure Load Balancer in front of F5 automatically created and applications you choose to protect will get public IP assigned there including standard ports (80/443). F5 is configured by ACS to listen on non-standard port so single F5 interface can be used to protect multiple applications and Azure LB is passing traffic to that port. F5 that provides application protection and pass traffic to actual IP address with our application.
+
+After successful provisioning make sure your web application can no longer be accessed on original IP, only throw Azure LB that points to F5 WAF. Also you might need to change your DNS records.
+
+## Simulate attack and see alerts in Azure Security Center
+Now if we have some form with fields in our web application, we can easily simulate primitive attack to see F5 protects our application and Azure Security Center provides overall view into security including F5 data. Pass something like ' OR 1=1 to your field (SQL injection attempt) and check results.
 
 # Author
 Tomas Kubica, linkedin.com/in/tkubica, Twittter: @tkubica
