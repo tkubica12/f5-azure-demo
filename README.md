@@ -2,7 +2,11 @@
 
 **WORK IN PROGRESS**
 
-While a lot of born-in-cloud applications are built only with cloud-native resources such as PaaS (App Service / SQL DB / Cosmos DB), Azure Load Balancer, Azure Application Gateway, Azure VPN, Azure Traffic Manager, some applications beying moved to cloud as VM have more needs and might require enterprise solutions such as F5. Many enterprises are using F5 and want to build their architecture in a cloud in similar way. Azure and F5 are very well integrated to offer enterprise grade solutions.
+While a lot of born-in-cloud applications are built only with cloud-native resources such as PaaS (App Service / SQL DB / Cosmos DB), Azure Load Balancer, Azure Application Gateway, Azure VPN, Azure Traffic Manager, some applications beying moved to cloud as VM have more needs and might require enterprise solutions such as F5. Due to great integration and strong partnership between F5 and Microsoft, combination of F5 and Azure might be best option for your applications.
+
+No matter whether your web application is traditional or modern, you might always want to protect it with Web Application Firewall making sure no L7 attack patterns make it throw, protocol level attacks are shielded or more sophisticated protections such as Data Leak Prevention are applied. F5 is trusted award winning WAF and is very well integrated to Azure Security Center.
+
+Many enterprises are using F5 and want to build their architecture in a cloud in similar way. Azure and F5 in combinationoffer the best enterprise grade solutions for you applications.
 
 - [F5 and Azure enterprise demo](#f5-and-azure-enterprise-demo)
     - [Why F5 and Azure](#why-f5-and-azure)
