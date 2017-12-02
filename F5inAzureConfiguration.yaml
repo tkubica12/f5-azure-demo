@@ -1,0 +1,34 @@
+- name: F5 and Azure demo playbook
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    location: westeurope
+    centralNetName: centralNet
+    onpremNetName: onpremNet
+    adminUsername: tomas
+    adminPassword: Azure12345678
+    license1: "{{ lookup('env','F5_LICENSE1') }}"
+    license2: "{{ lookup('env','F5_LICENSE2') }}"
+    servicePrincipal: "{{ lookup('env','AZURE_CLIENT_ID') }}"
+    clientSecret: "{{ lookup('env','AZURE_SECRET') }}"
+    tenantId: "{{ lookup('env','AZURE_TENANT') }}"
+    groupPrefix: f5demo
+    dnsPrefix: mybigip
+  tasks:
+  - name: Ensure virtual server is configured
+    bigip_virtual_server:
+        server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
+        user: "{{ adminUsername }}"
+        password: "{{ adminPassword }}"
+        partition: MyPartition
+        name: myvirtualserver
+        destination: 1.2.3.4
+        port: 443
+        pool: pool
+        snat: Automap
+        description: Test Virtual Server
+        all_profiles:
+            - http
+            - clientssl
+    delegate_to: localhost
