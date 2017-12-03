@@ -123,10 +123,10 @@
         validate_certs: False
         user: "{{ adminUsername }}"
         password: "{{ adminPassword }}"
-        name: azure-web1.app
+        name: azure-web2
         destination: 10.0.20.11
         port: 80
-        pool: azure-web1_pool
+        pool: azure-web1.app
         snat: None
         description: This is virtual server for web1 app in Azure
         all_profiles:
