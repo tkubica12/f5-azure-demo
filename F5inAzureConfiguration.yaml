@@ -25,8 +25,8 @@
         name: myvirtualserver
         destination: 1.2.3.4
         port: 443
-        pool: pool
-        snat: Automap
+        pool: mujtest
+        snat: None
         description: Test Virtual Server
         all_profiles:
             - http
