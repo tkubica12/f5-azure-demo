@@ -108,3 +108,54 @@
   - name: Update internal subnet with routing table
     command: "az network vnet subnet update -g {{ groupPrefix }}-central --vnet-name {{ centralNetName }} -n internal --route-table route-int-to-f5"
     delegate_to: localhost
+
+  - name: Find first Public IP
+    azure_rm_publicipaddress_facts:
+      resource_group: "{{ groupPrefix }}-central"
+      name: "{{ dnsPrefix }}-central-ext-pip0"
+    register: firstNIC
+
+  - name: Find second Public IP
+    azure_rm_publicipaddress_facts:
+      resource_group: "{{ groupPrefix }}-central"
+      name: "{{ dnsPrefix }}-central-ext-pip1"
+    register: secondNIC
+
+  - name: Find third Public IP
+    azure_rm_publicipaddress_facts:
+      resource_group: "{{ groupPrefix }}-central"
+      name: "{{ dnsPrefix }}-central-ext-pip2"
+    register: thirdNIC
+
+  - name: Store public IPs in variables
+    set_fact:
+      externalIp1: "{{ firstNIC.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+      externalIp2: "{{ secondNIC.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+      externalIp3: "{{ thirdNIC.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+
+  - name: Register first IP in my DNS
+    azure_rm_dnsrecordset:
+      resource_group: shared-services
+      relative_name: "app1.{{ groupPrefix }}"
+      zone_name: azure.tomaskubica.cz
+      record_type: A
+      records:
+        - entry: "{{ externalIp1}}"
+
+  - name: Register second IP in my DNS
+    azure_rm_dnsrecordset:
+      resource_group: shared-services
+      relative_name: "app2.{{ groupPrefix }}"
+      zone_name: azure.tomaskubica.cz
+      record_type: A
+      records:
+        - entry: "{{ externalIp1}}"
+
+  - name: Register third IP in my DNS
+    azure_rm_dnsrecordset:
+      resource_group: shared-services
+      relative_name: "app3.{{ groupPrefix }}"
+      zone_name: azure.tomaskubica.cz
+      record_type: A
+      records:
+        - entry: "{{ externalIp1}}"

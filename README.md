@@ -23,6 +23,7 @@ Many enterprises are using F5 and want to build their architecture in a cloud in
             - [Configure infrastructure firewall rules on F5 external NIC to allow our applications](#configure-infrastructure-firewall-rules-on-f5-external-nic-to-allow-our-applications)
             - [Enable IP Forwarding on F5 internal NIC](#enable-ip-forwarding-on-f5-internal-nic)
             - [Change routing in internal subnet to use F5 as default gateway](#change-routing-in-internal-subnet-to-use-f5-as-default-gateway)
+            - [Get public IP addresses and configure DNS records in Azure DNS](#get-public-ip-addresses-and-configure-dns-records-in-azure-dns)
         - [2nd set of tasks: Ensure Azure web servers are deployed (webServers.yaml)](#2nd-set-of-tasks-ensure-azure-web-servers-are-deployed-webserversyaml)
             - [Deploying 2 web applications](#deploying-2-web-applications)
         - [3st set of tasks: Ensure F5 is configured for our apps](#3st-set-of-tasks-ensure-f5-is-configured-for-our-apps)
@@ -108,6 +109,9 @@ In order for F5 to receive traffic not directly target to it (which is how routi
 
 #### Change routing in internal subnet to use F5 as default gateway
 Currently internal subnet is routed directly to Internet so in order for load-balancing via F5 to work, we would need to use SNAT. That would hide information about users and hurt our application logs + we want all traffic from internal subnet to reach Internet via F5 to provide additional protections. There we create routing table pointing to F5 and deploy to internal subnet
+
+#### Get public IP addresses and configure DNS records in Azure DNS
+In this demo we use approach of public IP per F5 service. In this tasks we are gathering actual public IP addresses as assigned by Azure and setting up A records in Azure DNS with our own domain.
 
 ### 2nd set of tasks: Ensure Azure web servers are deployed (webServers.yaml)
 In this series of tasks we will deploy two web applications with 3 instances each. We will place it to internal subnet and use tagging for service discovery.
