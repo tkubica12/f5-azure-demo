@@ -149,3 +149,22 @@
             - http
     delegate_to: localhost
 
+   - name: Wait for web1 to become accessible on public endpoint
+     uri:
+       url: "http://app1.{{ groupPrefix }}.azure.tomaskubica.cz"
+       status_code: 200
+     register: result
+     until: result.status == 200
+     retries: 120
+     delay: 1
+     delegate_to: localhost
+
+   - name: Wait for web2 to become accessible on public endpoint
+     uri:
+       url: "http://app2.{{ groupPrefix }}.azure.tomaskubica.cz"
+       status_code: 200
+     register: result
+     until: result.status == 200
+     retries: 120
+     delay: 1
+     delegate_to: localhost
