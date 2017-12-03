@@ -67,18 +67,19 @@
                   value: web1
 
     delegate_to: localhost
+    
   - name: Ensure virtual server is configured
     bigip_virtual_server:
         server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
         validate_certs: False
         user: "{{ adminUsername }}"
         password: "{{ adminPassword }}"
-        name: myvirtualserver
-        destination: 1.2.3.4
-        port: 443
-        pool: mujtest
+        name: azure-web1
+        destination: 10.0.20.11
+        port: 80
+        pool: azure-web1_pool
         snat: None
-        description: Test Virtual Server
+        description: This is virtual server for web1 app in Azure
         all_profiles:
             - http
             - clientssl
