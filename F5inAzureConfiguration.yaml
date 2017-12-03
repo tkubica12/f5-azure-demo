@@ -22,7 +22,6 @@
         validate_certs: False
         user: "{{ adminUsername }}"
         password: "{{ adminPassword }}"
-        partition: MyPartition
         name: myvirtualserver
         destination: 1.2.3.4
         port: 443
