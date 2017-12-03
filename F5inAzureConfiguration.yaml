@@ -62,12 +62,12 @@
                 - name: pool__public_private
                   value: private
                 - name: pool__tag_key
-                  value: f5pool
+                  value: F5pool
                 - name: pool__tag_value
                   value: web1
 
     delegate_to: localhost
-    
+
   - name: Ensure virtual server is configured
     bigip_virtual_server:
         server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
