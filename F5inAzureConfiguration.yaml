@@ -126,7 +126,7 @@
         name: azure-web2
         destination: 10.0.20.11
         port: 80
-        pool: azure-web1.app
+        pool: /azure-web1_pool/azure-web1.app
         snat: None
         description: This is virtual server for web1 app in Azure
         all_profiles:
@@ -143,7 +143,7 @@
         name: azure-web2
         destination: 10.0.20.12
         port: 80
-        pool: azure-web2.app
+        pool: /azure-web2_pool/azure-web2.app
         snat: None
         description: This is virtual server for web2 app in Azure
         all_profiles:
