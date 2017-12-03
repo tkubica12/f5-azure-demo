@@ -1,7 +1,5 @@
 # F5 and Azure enterprise demo
 
-**WORK IN PROGRESS**
-
 While a lot of born-in-cloud applications are built only with cloud-native resources such as PaaS (App Service / SQL DB / Cosmos DB), Azure Load Balancer, Azure Application Gateway, Azure VPN, Azure Traffic Manager, some applications beying moved to cloud as VM have more needs and might require enterprise solutions such as F5. Due to great integration and strong partnership between F5 and Microsoft, combination of F5 and Azure might be best option for your applications.
 
 No matter whether your web application is traditional or modern, you might always want to protect it with Web Application Firewall making sure no L7 attack patterns make it throw, protocol level attacks are shielded or more sophisticated protections such as Data Leak Prevention are applied. F5 is trusted award winning WAF and is very well integrated to Azure Security Center.
@@ -26,7 +24,7 @@ Many enterprises are using F5 and want to build their architecture in a cloud in
             - [Get public IP addresses and configure DNS records in Azure DNS](#get-public-ip-addresses-and-configure-dns-records-in-azure-dns)
         - [2nd set of tasks: Ensure Azure web servers are deployed (webServers.yaml)](#2nd-set-of-tasks-ensure-azure-web-servers-are-deployed-webserversyaml)
             - [Deploying 2 web applications](#deploying-2-web-applications)
-        - [3st set of tasks: Ensure F5 is configured for our apps](#3st-set-of-tasks-ensure-f5-is-configured-for-our-apps)
+        - [3st set of tasks: Ensure F5 is configured for our apps (F5inAzureConfiguration.yaml)](#3st-set-of-tasks-ensure-f5-is-configured-for-our-apps-f5inazureconfigurationyaml)
             - [Use Ansible to configure iApp service discovery](#use-ansible-to-configure-iapp-service-discovery)
             - [Use Ansible to create virtual servers](#use-ansible-to-create-virtual-servers)
             - [Test web1 and web2 is accessible on their public endpoints via F5](#test-web1-and-web2-is-accessible-on-their-public-endpoints-via-f5)
@@ -122,7 +120,7 @@ In this step we will leverage ARM template that is designed to deploy instances 
 
 Both applications will use NICs that are tagged F5pool:web1 or F5pool:web2. We will use those later in F5 configuration with iApp Service Discovery to automatically discover nodes and assign to F5 pool.
 
-### 3st set of tasks: Ensure F5 is configured for our apps
+### 3st set of tasks: Ensure F5 is configured for our apps (F5inAzureConfiguration.yaml)
 In this step we want to configure dynamicaly discovered backend pool and virtual server in F5.
 
 #### Use Ansible to configure iApp service discovery
@@ -168,7 +166,7 @@ After successful provisioning make sure your web application can no longer be ac
 Now if we have some form with fields in our web application, we can easily simulate primitive attack to see F5 protects our application and Azure Security Center provides overall view into security including F5 data. Pass something like ' OR 1=1 to your field (SQL injection attempt) and check results.
 
 # Author
-Tomas Kubica, linkedin.com/in/tkubica, Twittter: @tkubica
+Tomas Kubica, https://linkedin.com/in/tkubica, Twittter: https://twitter.com/tkubica
 
 Blog in Czech: https://tomaskubica.cz
 
