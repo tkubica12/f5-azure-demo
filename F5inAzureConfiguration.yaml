@@ -131,7 +131,6 @@
         description: This is virtual server for web1 app in Azure
         all_profiles:
             - http
-            - clientssl
     delegate_to: localhost
 
   - name: Ensure virtual server is configured for web2
@@ -148,5 +147,5 @@
         description: This is virtual server for web2 app in Azure
         all_profiles:
             - http
-            - clientssl
     delegate_to: localhost
+
