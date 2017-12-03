@@ -118,18 +118,13 @@ In this step we will leverage ARM template that is designed to deploy instances 
 Both applications will use NICs that are tagged F5pool:web1 or F5pool:web2. We will use those later in F5 configuration with iApp Service Discovery to automatically discover nodes and assign to F5 pool.
 
 ### 3st set of tasks: Ensure F5 is configured for our apps
-**TODO: configure F5 via Ansible**
-Currently done manualy
+In this step we want to configure dynamicaly discovered backend pool and virtual server in F5.
 
 #### Use Ansible to configure iApp service discovery
-TO DO
-
-Currently this is done via F5 GUI
+In first two tasks we are configuring iApp Service Discovery with Azure credentials to automatically discover pool members. In first case identified by tag F5pool:web1 and F5pool:web2 in second app. Also health check will be created.
 
 #### Use Ansible to create virtual servers
-TO DO
-
-Currently this is done via F5 GUI. We will use additional addresses (10.0.20.11, 10.0.20.12 and 10.0.20.13) as virtual server. Since Azure has public IP associated with those interfaces users will be able to access thos via Internet (Azure is providing 1:1 IP NAT).
+We will use additional addresses (10.0.20.11, 10.0.20.12 and 10.0.20.13) as virtual server. Since Azure has public IP associated with those interfaces users will be able to access thos via Internet (Azure is providing 1:1 IP NAT). This Ansible task is configuring virtual server for our web1 and web2 applications.
 
 ### 4th set of tasks: Ensure F5 on premises (simulated in Azure) is deployed (F5onPrem.yaml)
 In this series of task we deploy simulation of on-premises environment with F5.
