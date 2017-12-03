@@ -29,6 +29,7 @@ Many enterprises are using F5 and want to build their architecture in a cloud in
         - [3st set of tasks: Ensure F5 is configured for our apps](#3st-set-of-tasks-ensure-f5-is-configured-for-our-apps)
             - [Use Ansible to configure iApp service discovery](#use-ansible-to-configure-iapp-service-discovery)
             - [Use Ansible to create virtual servers](#use-ansible-to-create-virtual-servers)
+            - [Test web1 and web2 is accessible on their public endpoints via F5](#test-web1-and-web2-is-accessible-on-their-public-endpoints-via-f5)
         - [4th set of tasks: Ensure F5 on premises (simulated in Azure) is deployed (F5onPrem.yaml)](#4th-set-of-tasks-ensure-f5-on-premises-simulated-in-azure-is-deployed-f5onpremyaml)
             - [Deploy on-premises simulated environment](#deploy-on-premises-simulated-environment)
         - [5st set of tasks: Make sure bursting environment with app and iApp Application Connector exists (bursting.yaml)](#5st-set-of-tasks-make-sure-bursting-environment-with-app-and-iapp-application-connector-exists-burstingyaml)
@@ -129,6 +130,9 @@ In first two tasks we are configuring iApp Service Discovery with Azure credenti
 
 #### Use Ansible to create virtual servers
 We will use additional addresses (10.0.20.11, 10.0.20.12 and 10.0.20.13) as virtual server. Since Azure has public IP associated with those interfaces users will be able to access thos via Internet (Azure is providing 1:1 IP NAT). This Ansible task is configuring virtual server for our web1 and web2 applications.
+
+#### Test web1 and web2 is accessible on their public endpoints via F5
+Our playbook will now test we are able to access public endpoints throw F5 from our deployment server and get responses from our applications.
 
 ### 4th set of tasks: Ensure F5 on premises (simulated in Azure) is deployed (F5onPrem.yaml)
 In this series of task we deploy simulation of on-premises environment with F5.
