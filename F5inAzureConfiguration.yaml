@@ -49,6 +49,8 @@
                   value: "/#create_new#"
                 - name: monitor__uri
                   value: "/"
+                - name: monitor__response
+                  value: ""
                 - name: pool__interval
                   value: "10"
                 - name: pool__member_conn_limit
