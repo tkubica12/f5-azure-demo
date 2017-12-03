@@ -1,22 +1,3 @@
-- name: F5 and Azure demo playbook
-  hosts: localhost
-  connection: local
-  gather_facts: False
-  vars:
-    location: westeurope
-    centralNetName: centralNet
-    onpremNetName: onpremNet
-    adminUsername: tomas
-    adminPassword: Azure12345678
-    license1: "{{ lookup('env','F5_LICENSE1') }}"
-    license2: "{{ lookup('env','F5_LICENSE2') }}"
-    servicePrincipal: "{{ lookup('env','AZURE_CLIENT_ID') }}"
-    clientSecret: "{{ lookup('env','AZURE_SECRET') }}"
-    tenantId: "{{ lookup('env','AZURE_TENANT') }}"
-    subscriptionId: "{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}"
-    groupPrefix: f5demo
-    dnsPrefix: mybigip
-  tasks:
   - name: Ensure iApp Service Discovery is configured for web1
     bigip_iapp_service:
         server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
