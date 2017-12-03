@@ -19,6 +19,7 @@
   - name: Ensure virtual server is configured
     bigip_virtual_server:
         server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
+        validate_certs: False
         user: "{{ adminUsername }}"
         password: "{{ adminPassword }}"
         partition: MyPartition
