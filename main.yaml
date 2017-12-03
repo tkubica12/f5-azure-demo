@@ -13,6 +13,7 @@
     servicePrincipal: "{{ lookup('env','AZURE_CLIENT_ID') }}"
     clientSecret: "{{ lookup('env','AZURE_SECRET') }}"
     tenantId: "{{ lookup('env','AZURE_TENANT') }}"
+    subscriptionId: "{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}"
     groupPrefix: f5demo
     dnsPrefix: mybigip
   tasks:

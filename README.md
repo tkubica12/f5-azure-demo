@@ -66,6 +66,8 @@ sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B97
 sudo apt-get install apt-transport-https
 sudo apt-get update && sudo apt-get install azure-cli -y
 sudo pip install bigsuds
+sudo pip install deepdiff
+sudo pip install f5-sdk
 ```
 
 ## Deploy environment

@@ -13,9 +13,58 @@
     servicePrincipal: "{{ lookup('env','AZURE_CLIENT_ID') }}"
     clientSecret: "{{ lookup('env','AZURE_SECRET') }}"
     tenantId: "{{ lookup('env','AZURE_TENANT') }}"
+    subscriptionId: "{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}"
     groupPrefix: f5demo
     dnsPrefix: mybigip
   tasks:
+  - name: Ensure iApp Service Discovery is configured
+    bigip_iapp_service:
+        server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
+        validate_certs: False
+        user: "{{ adminUsername }}"
+        password: "{{ adminPassword }}"
+        template: f5.service_discovery
+        name: azure-web1
+        parameters:
+            variables:
+                - name: cloud__azure_client_id
+                  value: "{{ servicePrincipal }}"
+                - name: cloud__azure_resource_group
+                  value: "{{ groupPrefix }}-web1"
+                - name: cloud__azure_sp_secret
+                  value: "{{ clientSecret }}"
+                - name: cloud__azure_subscription_id
+                  value: "{{ subscriptionId }}"
+                - name: cloud__azure_tenant_id
+                  value: "{{ tenantId }}"
+                - name: cloud__cloud_provider
+                  value: azure
+                - name: monitor__frequency
+                  value: "10"
+                - name: monitor__http_method
+                  value: GET
+                - name: monitor__http_version
+                  value: http11
+                - name: monitor__monitor
+                  value: "/#create_new#"
+                - name: monitor__uri
+                  value: "/"
+                - name: pool__interval
+                  value: "10"
+                - name: pool__member_conn_limit
+                  value: "0"
+                - name: pool__member_port
+                  value: "80"
+                - name: pool__pool_to_use
+                  value: "/#create_new#"
+                - name: pool__public_private
+                  value: private
+                - name: pool__tag_key
+                  value: f5pool
+                - name: pool__tag_value
+                  value: web1
+
+    delegate_to: localhost
   - name: Ensure virtual server is configured
     bigip_virtual_server:
         server: "{{ dnsPrefix }}-central.{{ location }}.cloudapp.azure.com"
