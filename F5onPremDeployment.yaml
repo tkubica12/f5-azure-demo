@@ -60,3 +60,27 @@
           value: internal
         internalIpAddress:
           value: 10.128.10.10
+
+  - name: Ensure application ports are open on F5 external interface NSG
+    azure_rm_securitygroup:
+      resource_group: "{{ groupPrefix }}-onprem"
+      name: "{{ dnsPrefix }}-onprem-ext-nsg"
+      rules:
+        - name: Allow_HTTP
+          protocol: Tcp
+          destination_port_range: 80
+          access: Allow
+          priority: 100
+          direction: Inbound
+        - name: Allow_HTTPS
+          protocol: Tcp
+          destination_port_range: 443
+          access: Allow
+          priority: 102
+          direction: Inbound
+        - name: Allow_SSH
+          protocol: Tcp
+          destination_port_range: 22
+          access: Allow
+          priority: 103
+          direction: Inbound
