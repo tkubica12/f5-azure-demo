@@ -43,7 +43,7 @@
         licenseKey1:
           value: "{{ license2 }}"
         numberOfExternalIps:
-          value: 1
+          value: 2
         vnetName:
           value: "{{ onpremNetName }}"
         vnetResourceGroupName:
