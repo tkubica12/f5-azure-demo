@@ -62,9 +62,6 @@
         - 443
         - 8080
 
-  - debug:
-      msg: '{"fileUris": ["https://tomuvstore.blob.core.windows.net/f5proxy/f5-acproxy-1.1.0-build.70.tgz?st=2017-11-01T11%3A28%3A00Z&se=2020-12-02T11%3A28%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=aaIR0swjP5yWblHvYLcswE7P9hLY5tDGKbosMx071vM%3D", "https://raw.githubusercontent.com/tkubica12/f5-azure-demo/master/f5-cloud-proxy/deployF5Proxy.sh", "https://raw.githubusercontent.com/tkubica12/f5-azure-demo/master/f5-cloud-proxy/temp"],"commandToExecute": "sh deployF5Proxy.sh  {{ tenantId }} {{ subscriptionId }} {{ servicePrincipal }} {{ clientSecret }}"}'
-
   - name: Ensure VM extension to deploy F5 cloud proxy is created
     azure_rm_virtualmachine_extension:
       name: f5-proxy-extension

@@ -1,6 +1,0 @@
-{
-    "TENANT":"value1",
-    "AZURE_SUBSCRIPTION_ID":"value2",
-    "CLIENT_ID":"value3",
-    "APPLICATION_SECRET":"value4"
-}

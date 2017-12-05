@@ -150,6 +150,8 @@ Next we are going to deploy 3 instances of web application.
 #### Deploy and start F5 cloud proxy
 In order for F5 to create TLS tunnel from on-premises to cloud we need to have Linux VM with public IP address, installed Docker engine and run Docker container with F5 proxy. This is automated using deployment of Ubuntu 16.04 VM and running VM extension with custom script to install Docker, download image and run it.
 
+F5 iApp Application Connector need to have access to Azure in order to provide node discovery. This is handled by configuration file with credentials that need to be mapped to container as volume. We pass credentials to extension script as arguments and script creates file in proper format and map it to container.
+
 # Easily secure application with F5 WAF and Azure Security Center
 
 In this demo we will use simplified integrated scenario to secure web application running in Azure. We will use Azure Security Center to automatically deploy F5 WAF to protect application, simulate attack and demonstrate integration of F5 WAF with Security Center.
