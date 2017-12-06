@@ -14,7 +14,7 @@
         subnetName:
           value: internal
         vmSize:
-          value: Standard_B1s
+          value: Standard_A1_v2
         F5pool:
           value: web1
         adminUsername:
@@ -38,7 +38,7 @@
         subnetName:
           value: internal
         vmSize:
-          value: Standard_B1s
+          value: Standard_A1_v2
         F5pool:
           value: web2
         adminUsername:
